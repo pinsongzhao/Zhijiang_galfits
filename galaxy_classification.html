@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galaxy Visual Classification</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(120deg, #e0e7ff 0%, #f7f7f7 100%);
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #1976d2;
+            color: #fff;
+            padding: 24px 0 16px 0;
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            box-shadow: 0 2px 8px rgba(25,118,210,0.10);
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            max-width: 1200px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(25, 118, 210, 0.10);
+            overflow: hidden;
+        }
+        .left-panel {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 32px 32px 32px;
+            background: #f5faff;
+        }
+        .images {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .single-band img {
+            width: 720px;
+            max-width: 98vw;
+            border-radius: 12px;
+            border: 2.5px solid #1976d2;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(25,118,210,0.10);
+            background: #fff;
+        }
+        .rgb img {
+            width: 320px;
+            max-width: 60vw;
+            border-radius: 12px;
+            border: 2.5px solid #333;
+            box-shadow: 0 4px 16px rgba(51,51,51,0.10);
+            background: #fff;
+        }
+        .right-panel {
+            flex: 1;
+            padding: 40px 32px 32px 32px;
+            border-left: 1.5px solid #e3e8ee;
+            display: flex;
+            flex-direction: column;
+            background: #fafdff;
+        }
+        .title {
+            font-size: 2.1rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-align: left;
+            color: #1976d2;
+            letter-spacing: 1px;
+        }
+        .title .progress {
+            font-size: 1.1rem;
+            color: #555;
+            margin-left: 8px;
+            font-weight: normal;
+        }
+        .redshift-info {
+            margin-bottom: 8px;
+            font-size: 1.15rem;
+            color: #444;
+        }
+        .radec-info {
+            margin-bottom: 18px;
+            font-size: 1.08rem;
+            color: #444;
+        }
+        .classification {
+            margin-bottom: 32px;
+        }
+        .classification label {
+            display: block;
+            margin-bottom: 16px;
+            font-size: 1.15rem;
+            padding: 8px 0 8px 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+        .classification input[type="radio"]:checked + span {
+            background: #e3f0ff;
+            color: #1976d2;
+        }
+
+        .flags-section {
+            margin-top: 8px;
+            margin-bottom: 18px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: #f2f6fa;
+            border: 1px solid #e3e8ee;
+        }
+        .flags-title {
+            font-weight: 700;
+            color: #1976d2;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+        }
+        .flag-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+        }
+        .flag-row label {
+            min-width: 84px;
+            font-size: 1rem;
+            color: #333;
+        }
+        .flag-input {
+            flex: 1;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1.5px solid #b3c6e0;
+            background: #fff;
+            font-size: 0.98rem;
+        }
+
+        .sub-option {
+            margin: 6px 0 14px 28px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .mini-btn {
+            padding: 4px 10px;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            background: #42a5f5;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(25,118,210,0.08);
+        }
+        .mini-btn:active {
+            transform: scale(0.98);
+        }
+
+        .choice-btn {
+            padding: 6px 14px;
+            font-size: 0.98rem;
+            border-radius: 8px;
+            border: 1.5px solid #b3c6e0;
+            background: #fff;
+            cursor: pointer;
+            color: #333;
+        }
+        .choice-btn.active {
+            background: #e3f0ff;
+            border-color: #1976d2;
+            color: #1976d2;
+            font-weight: 700;
+        }
+        .note-label {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #1976d2;
+            font-size: 1.1rem;
+        }
+        .saved-notes {
+            margin-top: 10px;
+        }
+        .saved-note {
+            font-size: 0.98rem;
+            color: #444;
+            background: #f2f6fa;
+            border-radius: 6px;
+            padding: 6px 10px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .delete-note-btn {
+            background: #e57373;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 10px;
+            font-size: 0.92rem;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .delete-note-btn:hover {
+            background: #c62828;
+        }
+        textarea {
+            width: 100%;
+            min-height: 70px;
+            border-radius: 8px;
+            border: 1.5px solid #b3c6e0;
+            padding: 10px;
+            font-size: 1.05rem;
+            margin-top: 10px;
+            background: #fafdff;
+            resize: vertical;
+            box-shadow: 0 2px 8px rgba(25,118,210,0.04);
+        }
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        .nav button {
+            padding: 12px 32px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(90deg, #1976d2 60%, #42a5f5 100%);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 2px 8px rgba(25,118,210,0.08);
+        }
+        .nav button:active {
+            transform: scale(0.97);
+        }
+        .nav button:disabled {
+            background: #b3c6e0;
+            cursor: not-allowed;
+        }
+        @media (max-width: 900px) {
+            .container { flex-direction: column; max-width: 98vw; }
+            .left-panel, .right-panel { padding: 24px 8vw; }
+            .single-band img, .rgb img { width: 90vw; }
+        }
+        @media (max-width: 600px) {
+            .container { margin: 0; border-radius: 0; }
+            .left-panel, .right-panel { padding: 16px 2vw; }
+            .title { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>Galaxy Visual Classification</header>
+    <!-- Import Results按钮已移除 -->
+    <div class="container">
+        <div class="left-panel">
+            <div class="images">
+                <div class="single-band">
+                    <img id="single-band-img" src="" alt="Single Band Image">
+                </div>
+    <!-- 一键清除按钮移到container外部 -->
+    <button id="clear-all-btn" style="position:fixed;left:36px;bottom:36px;z-index:1000;padding:14px 32px;font-size:1.1rem;border-radius:10px;background:#e57373;color:#fff;border:none;box-shadow:0 2px 8px rgba(229,115,115,0.18);cursor:pointer;">Clear All Classifications</button>
+                <div class="rgb">
+                    <img id="rgb-img" src="" alt="RGB Image">
+                    <div style="width:100%;display:flex;justify-content:flex-end;">
+                        <button id="export-result-btn" style="margin:16px 0 0 0;padding:10px 24px;font-size:1rem;border-radius:10px;background:#1976d2;color:#fff;border:none;box-shadow:0 2px 8px rgba(25,118,210,0.10);cursor:pointer;">Export Results</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right-panel">
+            <div class="title" id="galaxy-title"></div>
+            <div class="redshift-info">
+                Redshift (z): <span id="galaxy-redshift"></span>
+            </div>
+            <div class="radec-info" id="galaxy-ra-dec"></div>
+            <div class="guodong-class-info" id="guodong-class-info" style="margin-bottom:18px;font-size:1.08rem;color:#d32f2f;"></div>
+            <form id="classification-form">
+                <div class="classification">
+                    <label><input type="radio" name="class" value="Elliptical" required><span> Elliptical</span></label>
+                    <div class="sub-option" id="elliptical-flag-row" style="display:none;">
+                        <span style="font-size:1rem;color:#333;">flag:</span>
+                        <input type="text" id="elliptical-flag-input" class="flag-input" placeholder="flag (optional)">
+                    </div>
+                    <label><input type="radio" name="class" value="Disk"><span> Disk</span></label>
+                    <div class="sub-option" id="disk-row" style="display:none;">
+                        <button type="button" class="choice-btn" data-disk-choice="bar">bar</button>
+                        <button type="button" class="choice-btn" data-disk-choice="no bar">no bar</button>
+                        <button type="button" class="choice-btn" data-disk-choice="other">other</button>
+                    </div>
+                    <div class="sub-option" id="disk-other-flag-row" style="display:none;margin-left:28px;">
+                        <span style="font-size:1rem;color:#333;">flag:</span>
+                        <input type="text" id="disk-other-flag-input" class="flag-input" placeholder="disk flag (optional)">
+                    </div>
+                    <label><input type="radio" name="class" value="Merger"><span> Merger</span></label>
+                    <div class="sub-option" id="merger-flag-row" style="display:none;">
+                        <span style="font-size:1rem;color:#333;">flag:</span>
+                        <input type="text" id="merger-flag-input" class="flag-input" placeholder="flag (optional)">
+                    </div>
+                    <label><input type="radio" name="class" value="Other"><span> Other</span></label>
+                    <div class="sub-option" id="other-flag-row" style="display:none;">
+                        <span style="font-size:1rem;color:#333;">flag:</span>
+                        <input type="text" id="other-flag-input" class="flag-input" placeholder="flag (optional)">
+                    </div>
+                </div>
+                <div class="note-label">Note</div>
+                <textarea name="note" id="note" placeholder="Add any notes about this galaxy..."></textarea>
+                <button type="button" id="save-note-btn" style="margin-top:8px;margin-bottom:2px;padding:6px 18px;font-size:1rem;border-radius:6px;background:#1976d2;color:#fff;border:none;cursor:pointer;">Save</button>
+                <div class="saved-notes" id="saved-notes" style="font-size:0.98rem;color:#444;background:#f2f6fa;padding:8px 12px;border-radius:6px;margin-top:10px;display:flex;align-items:center;gap:10px;"></div>
+                <div class="nav">
+                    <button type="button" id="prev-btn">Previous</button>
+                    <button type="button" id="next-btn">Next</button>
+                </div>
+                <div style="margin-top:18px;display:flex;align-items:center;gap:8px;">
+                    <input type="number" id="jump-input" min="1" max="428" placeholder="Go to #" style="width:70px;padding:4px 6px;border-radius:5px;border:1.2px solid #b3c6e0;font-size:1rem;">
+                    <button type="button" id="jump-btn" style="padding:6px 16px;font-size:1rem;border-radius:6px;background:#42a5f5;color:#fff;border:none;cursor:pointer;">Jump</button>
+                </div>
+                <!-- 导出按钮已移至RGB图像右下侧 -->
+            </form>
+        </div>
+    </div>
+    <script>
+        // 读取Sample_data.csv并建立name到class的映射（更健壮的CSV解析）
+        let nameToClass = {};
+        fetch('Sample_data.csv').then(r => r.text()).then(text => {
+            const lines = text.split(/\r?\n/).filter(l => l.trim());
+            // 获取表头索引
+            const header = lines[0].split(',');
+            const nameIdx = header.findIndex(h => h.trim().toLowerCase() === 'fscname');
+            const classIdx = header.findIndex(h => h.trim().toLowerCase() === 'class');
+            for (let i = 1; i < lines.length; i++) {
+                const cols = lines[i].split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
+                if (cols.length <= Math.max(nameIdx, classIdx)) continue;
+                const name = cols[nameIdx].replace(/"/g, '').trim();
+                const cls = cols[classIdx].replace(/"/g, '').trim();
+                nameToClass[name] = cls;
+            }
+        });
+        // 390个源信息，fscname和redshift
+        // galaxies数组增加ra, dec字段（示例数据，实际请用真实ra,dec替换）
+        const galaxies = [
+            { name: "F00007+0031", z: 0.1390, ra: 0.825899, dec: 0.812318 },
+            { name: "F00040+3248", z: 0.0816, ra: 1.671291, dec: 33.086302 },
+            { name: "F00090+1425", z: 0.1319, ra: 2.905200, dec: 14.700398 },
+            { name: "F00145+0058", z: 0.1057, ra: 4.283122, dec: 1.251738 },
+            { name: "F00344-0130", z: 0.2936, ra: 9.249273, dec: -1.225714 },
+            { name: "F00423+1905", z: 0.1788, ra: 11.246380, dec: 19.361450 },
+            { name: "F00447+1426", z: 0.0391, ra: 11.830816, dec: 14.703501 },
+            { name: "F00570+1503", z: 0.0183, ra: 14.917142, dec: 15.330978 },
+            { name: "F01017+2409", z: 0.1655, ra: 16.121184, dec: 24.416304 },
+            { name: "F01102-0033", z: 0.0175, ra: 18.202533, dec: -0.290186 },
+            { name: "F01111-1050", z: 0.0522, ra: 18.403091, dec: -10.579374 },
+            { name: "F01169-0015", z: 0.1046, ra: 19.878425, dec: 0.012554 },
+            { name: "F01182-0844", z: 0.0347, ra: 20.199993, dec: -8.488443 },
+            { name: "F01194-0118", z: 0.0544, ra: 20.499255, dec: -1.040099 },
+            { name: "F01315-1001", z: 0.0408, ra: 23.510558, dec: -9.774157 },
+            { name: "F01322-0051", z: 0.0838, ra: 23.704896, dec: -0.612206 },
+            { name: "F01346-0924", z: 0.0699, ra: 24.278946, dec: -9.149310 },
+            { name: "F01441-0836", z: 0.1289, ra: 26.670053, dec: -8.354808 },
+            { name: "F01560+3138", z: 0.0710, ra: 29.734789, dec: 31.891838 },
+            { name: "F01572+0009", z: 0.1628, ra: 29.959387, dec: 0.394692 },
+            { name: "F02017-0708", z: 0.1905, ra: 31.053674, dec: -6.905054 },
+            { name: "F02077-0917", z: 0.0416, ra: 32.547897, dec: -9.059870 },
+            { name: "F02110-0056", z: 0.0201, ra: 33.409831, dec: -0.717300 },
+            { name: "F02142-0953", z: 0.0728, ra: 34.170484, dec: -9.669393 },
+            { name: "F02171-0525", z: 0.1499, ra: 34.912857, dec: -5.192708 },
+            { name: "F02267-0524", z: 0.0737, ra: 37.304120, dec: -5.189090 },
+            { name: "F02486-0714", z: 0.3267, ra: 42.772019, dec: -7.041703 },
+            { name: "F02494-0835", z: 0.0619, ra: 42.984856, dec: -8.377052 },
+            { name: "F03100+0047", z: 0.1297, ra: 48.160096, dec: 0.976225 },
+            { name: "F03134+4008", z: 0.0164, ra: 49.191071, dec: 40.329948 },
+            { name: "F03200-0113", z: 0.0409, ra: 50.649406, dec: -1.052150 },
+            { name: "F03209-0806", z: 0.1664, ra: 50.845275, dec: -7.937580 },
+            { name: "F03229-0619", z: 0.0344, ra: 51.355674, dec: -6.143870 },
+            { name: "F03277-0542", z: 0.0134, ra: 52.555265, dec: -5.543350 },
+            { name: "F03319-0800", z: 0.2870, ra: 53.613037, dec: -7.839190 },
+            { name: "F07335+4250", z: 0.0882, ra: 114.263710, dec: 42.737404 },
+            { name: "F07387+4955", z: 0.0223, ra: 115.634600, dec: 49.810025 },
+            { name: "F07407+2720", z: 0.2527, ra: 115.966840, dec: 27.211000 },
+            { name: "F07480+4956", z: 0.0244, ra: 117.966200, dec: 49.814318 },
+            { name: "F07507+2657", z: 0.0818, ra: 118.469730, dec: 26.816817 },
+            { name: "F07520+3918", z: 0.0332, ra: 118.855390, dec: 39.186094 },
+            { name: "F07546+3507", z: 0.0705, ra: 119.463330, dec: 34.989384 },
+            { name: "F07551+4153", z: 0.0935, ra: 119.658920, dec: 41.753455 },
+            { name: "F07572+2645", z: 0.0267, ra: 120.087440, dec: 26.613535 },
+            { name: "F07588+4651", z: 0.1206, ra: 120.601410, dec: 46.716901 },
+            { name: "F08008+3902", z: 0.2112, ra: 121.038500, dec: 38.896884 },
+            { name: "F08026+2618", z: 0.0171, ra: 121.411100, dec: 26.168190 },
+            { name: "F08038+3622", z: 0.0323, ra: 121.779930, dec: 36.233472 },
+            { name: "F08043+3909", z: 0.0233, ra: 121.920810, dec: 39.004246 },
+            { name: "F08045+3840", z: 0.0666, ra: 121.967800, dec: 38.536388 },
+            { name: "F08070+4821", z: 0.0775, ra: 122.667830, dec: 48.209218 },
+            { name: "F08074+2351", z: 0.1335, ra: 122.608630, dec: 23.698942 },
+            { name: "F08091+3449", z: 0.2561, ra: 123.115190, dec: 34.683592 },
+            { name: "F08116+1938", z: 0.1440, ra: 123.648850, dec: 19.494376 },
+            { name: "F08117+4613", z: 0.0410, ra: 123.820300, dec: 46.075246 },
+            { name: "F08125+0336", z: 0.0510, ra: 123.790840, dec: 3.464906 },
+            { name: "F08147+3137", z: 0.1238, ra: 124.480020, dec: 31.474271 },
+            { name: "F08162+2716", z: 0.2612, ra: 124.820010, dec: 27.126085 },
+            { name: "F08168+3738", z: 0.0819, ra: 125.032540, dec: 37.477689 },
+            { name: "F08180+5612", z: 0.1588, ra: 125.514630, dec: 56.050324 },
+            { name: "F08187+5428", z: 0.0863, ra: 125.653540, dec: 54.310145 },
+            { name: "F08190+1148", z: 0.1037, ra: 125.450190, dec: 11.653937 },
+            { name: "F08219+1549", z: 0.2201, ra: 126.190150, dec: 15.662261 },
+            { name: "F08238+0752", z: 0.3114, ra: 126.639630, dec: 7.713446 },
+            { name: "F08242+5552", z: 0.0304, ra: 127.044420, dec: 55.712472 },
+            { name: "F08275+3719", z: 0.1547, ra: 127.688390, dec: 37.162996 },
+            { name: "F08280+5429", z: 0.2924, ra: 127.974520, dec: 54.325339 },
+            { name: "F08288+4045", z: 0.1271, ra: 128.032520, dec: 40.581293 },
+            { name: "F08328+3007", z: 0.0763, ra: 128.968140, dec: 29.954444 },
+            { name: "F08334+1604", z: 0.2059, ra: 129.064070, dec: 15.902739 },
+            { name: "F08354+2555", z: 0.0182, ra: 129.600030, dec: 25.754542 },
+            { name: "F08365+3549", z: 0.1604, ra: 129.916300, dec: 35.654181 },
+            { name: "F08382+3707", z: 0.2281, ra: 130.365460, dec: 36.937964 },
+            { name: "F08407+2630", z: 0.2574, ra: 130.957300, dec: 26.319650 },
+            { name: "F08451+3651", z: 0.1695, ra: 132.088970, dec: 36.677683 },
+            { name: "F08505+4147", z: 0.1395, ra: 133.450060, dec: 41.604655 },
+            { name: "F08518+1752", z: 0.0652, ra: 133.663500, dec: 17.689553 },
+            { name: "F08530+4922", z: 0.0711, ra: 134.137900, dec: 49.187596 },
+            { name: "F08542+1920", z: 0.3308, ra: 134.276470, dec: 19.148199 },
+            { name: "F08560+0143", z: 0.1068, ra: 134.649940, dec: 1.530422 },
+            { name: "F08568+2455", z: 0.0969, ra: 134.963410, dec: 24.726126 },
+            { name: "F08580+6020", z: 0.0111, ra: 135.493320, dec: 60.151709 },
+            { name: "F09005+0223", z: 0.3291, ra: 135.782680, dec: 2.197844 },
+            { name: "F09005+2253", z: 0.2905, ra: 135.856770, dec: 22.696541 },
+            { name: "F09008+3643", z: 0.2879, ra: 135.999630, dec: 36.515193 },
+            { name: "F09013+4718", z: 0.1716, ra: 136.189340, dec: 47.100426 },
+            { name: "F09055+3111", z: 0.0631, ra: 137.154500, dec: 30.990904 },
+            { name: "F09095+2559", z: 0.1427, ra: 138.119430, dec: 25.785334 },
+            { name: "F09117+3111", z: 0.3064, ra: 138.681180, dec: 30.993299 },
+            { name: "F09128+0416", z: 0.0873, ra: 138.866170, dec: 4.074501 },
+            { name: "F09137+1807", z: 0.0271, ra: 139.143030, dec: 17.919008 },
+            { name: "F09138+2847", z: 0.1425, ra: 139.191790, dec: 28.590765 },
+            { name: "F09159+2129", z: 0.1490, ra: 139.702550, dec: 21.288067 },
+            { name: "F09186+1030", z: 0.0395, ra: 140.314850, dec: 10.294746 },
+            { name: "F09199+0521", z: 0.0589, ra: 140.645020, dec: 5.144361 },
+            { name: "F09235+0704", z: 0.0780, ra: 141.557520, dec: 6.849015 },
+            { name: "F09244+2314", z: 0.0264, ra: 141.827120, dec: 23.020103 },
+            { name: "F09247+1949", z: 0.1345, ra: 141.871300, dec: 19.611162 },
+            { name: "F09256+1500", z: 0.1361, ra: 142.089310, dec: 14.794874 },
+            { name: "F09291+3659", z: 0.1395, ra: 143.054780, dec: 36.767282 },
+            { name: "F09305+6813", z: 0.0707, ra: 143.697630, dec: 68.009199 },
+            { name: "F09311+0339", z: 0.1014, ra: 143.427320, dec: 3.427302 },
+            { name: "F09320+6134", z: 0.0394, ra: 143.964970, dec: 61.353203 },
+            { name: "F09339+3629", z: 0.1798, ra: 144.262620, dec: 36.260330 },
+            { name: "F09380+3457", z: 0.0500, ra: 145.267150, dec: 34.732902 },
+            { name: "F09392+2354", z: 0.0213, ra: 145.519970, dec: 23.685263 },
+            { name: "F09414+4843", z: 0.0553, ra: 146.175980, dec: 48.487973 },
+            { name: "F09444+5444", z: 0.1358, ra: 146.969260, dec: 54.501703 },
+            { name: "F09446+1359", z: 0.0744, ra: 146.827040, dec: 13.755760 },
+            { name: "F09453+5043", z: 0.0563, ra: 147.177800, dec: 50.492079 },
+            { name: "F09455+4044", z: 0.0468, ra: 147.160090, dec: 40.512147 },
+            { name: "F09478+0148", z: 0.0249, ra: 147.608630, dec: 1.582541 },
+            { name: "F09478+3940", z: 0.2055, ra: 147.701610, dec: 39.447368 },
+            { name: "F09483+1443", z: 0.2333, ra: 147.762650, dec: 14.494907 },
+            { name: "F09498+2134", z: 0.0740, ra: 148.156130, dec: 21.345931 },
+            { name: "F09499+0155", z: 0.0741, ra: 148.115800, dec: 1.689280 },
+            { name: "F09503+1035", z: 0.0390, ra: 148.245150, dec: 10.346242 },
+            { name: "F09530+0516", z: 0.0345, ra: 148.918690, dec: 5.043533 },
+            { name: "F09564+4929", z: 0.0652, ra: 149.922350, dec: 49.258208 },
+            { name: "F09572+1316", z: 0.0352, ra: 149.982710, dec: 13.043827 },
+            { name: "F10020+1501", z: 0.0842, ra: 151.198370, dec: 14.779339 },
+            { name: "F10026+4347", z: 0.1783, ra: 151.424400, dec: 43.544565 },
+            { name: "F10036+4136", z: 0.1494, ra: 151.677420, dec: 41.367208 },
+            { name: "F10042+3934", z: 0.0395, ra: 151.810010, dec: 39.329877 },
+            { name: "F10043+5625", z: 0.1766, ra: 151.902050, dec: 56.186813 },
+            { name: "F10079+2121", z: 0.0662, ra: 152.666630, dec: 21.112168 },
+            { name: "F10099+1032", z: 0.0696, ra: 153.160500, dec: 10.288681 },
+            { name: "F10101+0630", z: 0.0783, ra: 153.194150, dec: 6.267974 },
+            { name: "F10101+1623", z: 0.0754, ra: 153.210000, dec: 16.151748 },
+            { name: "F10102+1653", z: 0.1180, ra: 153.233500, dec: 16.648083 },
+            { name: "F10106+2227", z: 0.2733, ra: 153.355960, dec: 22.208173 },
+            { name: "F10137+4225", z: 0.0550, ra: 154.187970, dec: 42.173744 },
+            { name: "F10144+2929", z: 0.0490, ra: 154.326100, dec: 29.242819 },
+            { name: "F10156+6413", z: 0.0415, ra: 154.802390, dec: 63.967421 },
+            { name: "F10158+1427", z: 0.0324, ra: 154.639470, dec: 14.211448 },
+            { name: "F10175+1751", z: 0.1783, ra: 155.079370, dec: 17.613276 },
+            { name: "F10177+4124", z: 0.1339, ra: 155.188070, dec: 41.156737 },
+            { name: "F10234+3052", z: 0.3403, ra: 156.572820, dec: 30.611958 },
+            { name: "F10245+3609", z: 0.0523, ra: 156.857150, dec: 35.908675 },
+            { name: "F10255+5039", z: 0.0916, ra: 157.155650, dec: 50.397471 },
+            { name: "F10256+4919", z: 0.0429, ra: 157.174920, dec: 49.071860 },
+            { name: "F10267+1423", z: 0.0609, ra: 157.357210, dec: 14.139788 },
+            { name: "F10267+2114", z: 0.0552, ra: 157.368130, dec: 20.991624 },
+            { name: "F10288+1245", z: 0.0330, ra: 157.880330, dec: 12.495550 },
+            { name: "F10289+3521", z: 0.1227, ra: 157.950340, dec: 35.098417 },
+            { name: "F10311+3610", z: 0.1689, ra: 158.497790, dec: 35.919185 },
+            { name: "F10317+3953", z: 0.0431, ra: 158.660820, dec: 39.641193 },
+            { name: "F10320+1537", z: 0.1934, ra: 158.664410, dec: 15.375848 },
+            { name: "F10344+6006", z: 0.0907, ra: 159.422980, dec: 59.847113 },
+            { name: "F10361+2304", z: 0.0556, ra: 159.733330, dec: 22.805720 },
+            { name: "F10378+4012", z: 0.1383, ra: 160.185410, dec: 39.953133 },
+            { name: "F10383+3458", z: 0.0585, ra: 160.289330, dec: 34.716955 },
+            { name: "F10388+4033", z: 0.0694, ra: 160.450180, dec: 40.289329 },
+            { name: "F10418+3901", z: 0.0357, ra: 161.163170, dec: 38.759552 },
+            { name: "F10419+3430", z: 0.0708, ra: 161.189430, dec: 34.252942 },
+            { name: "F10455+3320", z: 0.1261, ra: 162.079160, dec: 33.072302 },
+            { name: "F10485+3837", z: 0.0891, ra: 162.852110, dec: 38.346296 },
+            { name: "F10517+4807", z: 0.0729, ra: 163.663830, dec: 47.862281 },
+            { name: "F10541+3335", z: 0.0511, ra: 164.222390, dec: 33.329354 },
+            { name: "F10568+4609", z: 0.0623, ra: 164.912180, dec: 45.891585 },
+            { name: "F10580+5835", z: 0.1593, ra: 165.280570, dec: 58.309784 },
+            { name: "F11021+5116", z: 0.1183, ra: 166.267550, dec: 50.997189 },
+            { name: "F11052+3708", z: 0.0267, ra: 166.998160, dec: 36.872295 },
+            { name: "F11066+4242", z: 0.2317, ra: 167.361280, dec: 42.432798 },
+            { name: "F11070+4249", z: 0.2615, ra: 167.470110, dec: 42.554359 },
+            { name: "F11083+3530", z: 0.0607, ra: 167.770060, dec: 35.230802 },
+            { name: "F11112+0951", z: 0.0293, ra: 168.457250, dec: 9.586292 },
+            { name: "F11116+3444", z: 0.0693, ra: 168.580180, dec: 34.478793 },
+            { name: "F11119+3257", z: 0.1876, ra: 168.662060, dec: 32.692637 },
+            { name: "F11134+0225", z: 0.2109, ra: 169.013050, dec: 2.147853 },
+            { name: "F11151+2934", z: 0.0234, ra: 169.469370, dec: 29.304483 },
+            { name: "F11162+6020", z: 0.2643, ra: 169.779300, dec: 60.075191 },
+            { name: "F11163+3207", z: 0.2618, ra: 169.759440, dec: 31.856282 },
+            { name: "F11167+5351", z: 0.1058, ra: 169.891680, dec: 53.588522 },
+            { name: "F11186+0342", z: 0.1521, ra: 170.309230, dec: 3.429673 },
+            { name: "F11244+4438", z: 0.0713, ra: 171.808730, dec: 44.350887 },
+            { name: "F11258+5806", z: 0.0513, ra: 172.170830, dec: 57.835140 },
+            { name: "F11277+4951", z: 0.0956, ra: 172.621390, dec: 49.582729 },
+            { name: "F11338+2152", z: 0.0295, ra: 174.122400, dec: 21.596081 },
+            { name: "F11374+4131", z: 0.0713, ra: 175.014150, dec: 41.250982 },
+            { name: "F11376+2458", z: 0.0119, ra: 175.058090, dec: 24.697065 },
+            { name: "F11510+4629", z: 0.0243, ra: 178.424070, dec: 46.211737 },
+            { name: "F11513+6155", z: 0.1468, ra: 178.508540, dec: 61.645555 },
+            { name: "F11530-0029", z: 0.0646, ra: 178.908280, dec: -0.770612 },
+            { name: "F11553+4557", z: 0.1467, ra: 179.492440, dec: 45.673404 },
+            { name: "F11598+1507", z: 0.0243, ra: 180.599900, dec: 14.843651 },
+            { name: "F12005+0009", z: 0.1222, ra: 180.768470, dec: -0.124293 },
+            { name: "F12009+0246", z: 0.0772, ra: 180.887270, dec: 2.492961 },
+            { name: "F12018+1941", z: 0.1679, ra: 181.102260, dec: 19.419387 },
+            { name: "F12033+3527", z: 0.0535, ra: 181.457790, dec: 35.179432 },
+            { name: "F12044+5034", z: 0.0621, ra: 181.731810, dec: 50.293656 },
+            { name: "F12073+0644", z: 0.0799, ra: 182.477580, dec: 6.470279 },
+            { name: "F12090+3601", z: 0.0614, ra: 182.899510, dec: 35.738178 },
+            { name: "F12100+0214", z: 0.1894, ra: 183.151650, dec: 1.967521 },
+            { name: "F12126+0943", z: 0.2632, ra: 183.791020, dec: 9.452635 },
+            { name: "F12134+1257", z: 0.0661, ra: 184.000180, dec: 12.687309 },
+            { name: "F12144+3811", z: 0.0630, ra: 184.215660, dec: 37.910576 },
+            { name: "F12178+0503", z: 0.0812, ra: 185.108720, dec: 4.775538 },
+            { name: "F12219+6332", z: 0.1713, ra: 186.084490, dec: 63.265204 },
+            { name: "F12277+6136", z: 0.1487, ra: 187.514610, dec: 61.317982 },
+            { name: "F12295+3546", z: 0.1310, ra: 187.983270, dec: 35.504247 },
+            { name: "F12322+6234", z: 0.1352, ra: 188.624410, dec: 62.301728 },
+            { name: "F12325+0511", z: 0.0837, ra: 188.764550, dec: 4.925154 },
+            { name: "F12397+3333", z: 0.0435, ra: 190.544210, dec: 33.284064 },
+            { name: "F12410+0414", z: 0.1008, ra: 190.891740, dec: 3.964813 },
+            { name: "F12425+6042", z: 0.1508, ra: 191.191710, dec: 60.430208 },
+            { name: "F12433+6540", z: 0.3197, ra: 191.362420, dec: 65.399519 },
+            { name: "F12438+4124", z: 0.0667, ra: 191.550450, dec: 41.136645 },
+            { name: "F12440+0238", z: 0.0481, ra: 191.646870, dec: 2.369098 },
+            { name: "F12452+2310", z: 0.1147, ra: 191.919480, dec: 22.904262 },
+            { name: "F12464-0053", z: 0.0888, ra: 192.249680, dec: -1.159850 },
+            { name: "F12481+0036", z: 0.1252, ra: 192.676840, dec: 0.332635 },
+            { name: "F12489+6619", z: 0.2817, ra: 192.751910, dec: 66.057440 },
+            { name: "F12543+2710", z: 0.0208, ra: 194.213210, dec: 26.898889 },
+            { name: "F12551+0825", z: 0.2724, ra: 194.413890, dec: 8.158807 },
+            { name: "F12582+6156", z: 0.0522, ra: 195.083180, dec: 61.655030 },
+            { name: "F13006+4055", z: 0.0669, ra: 195.754410, dec: 40.644595 },
+            { name: "F13037+0908", z: 0.1716, ra: 196.577380, dec: 8.878184 },
+            { name: "F13039+0038", z: 0.1478, ra: 196.637690, dec: 0.380135 },
+            { name: "F13049+5647", z: 0.0805, ra: 196.762050, dec: 56.532893 },
+            { name: "F13094-0231", z: 0.1139, ra: 198.021680, dec: -2.790334 },
+            { name: "F13096+6716", z: 0.0784, ra: 197.872890, dec: 67.007238 },
+            { name: "F13136+4636", z: 0.0573, ra: 198.958920, dec: 46.338800 },
+            { name: "F13139+3031", z: 0.0492, ra: 199.066480, dec: 30.264519 },
+            { name: "F13143+2527", z: 0.1456, ra: 199.175230, dec: 25.198763 },
+            { name: "F13167+1336", z: 0.0961, ra: 199.808080, dec: 13.341909 },
+            { name: "F13174+0737", z: 0.1601, ra: 199.976400, dec: 7.372684 },
+            { name: "F13190+0002", z: 0.0822, ra: 200.397210, dec: -0.218269 },
+            { name: "F13204+0825", z: 0.0499, ra: 200.730970, dec: 8.161559 },
+            { name: "F13298+3142", z: 0.0898, ra: 203.022050, dec: 31.460128 },
+            { name: "F13306+4207", z: 0.0273, ra: 203.202920, dec: 41.871832 },
+            { name: "F13308+5946", z: 0.1710, ra: 203.158080, dec: 59.514910 },
+            { name: "F13314+1331", z: 0.0435, ra: 203.467100, dec: 13.273327 },
+            { name: "F13328+0140", z: 0.0175, ra: 203.852300, dec: 1.410558 },
+            { name: "F13331+2359", z: 0.1124, ra: 203.885340, dec: 23.730294 },
+            { name: "F13342+3932", z: 0.1790, ra: 204.100270, dec: 39.291969 },
+            { name: "F13354+3924", z: 0.0198, ra: 204.416150, dec: 39.154573 },
+            { name: "F13372+2614", z: 0.3446, ra: 204.902460, dec: 25.996689 },
+            { name: "F13403-0038", z: 0.3256, ra: 205.715020, dec: -0.895914 },
+            { name: "F13432+4157", z: 0.0085, ra: 206.329770, dec: 41.712440 },
+            { name: "F13450+6437", z: 0.0242, ra: 206.633890, dec: 64.390328 },
+            { name: "F13490+0505", z: 0.0758, ra: 207.899550, dec: 4.850118 },
+            { name: "F13495+2137", z: 0.0608, ra: 207.964680, dec: 21.369897 },
+            { name: "F13508+2437", z: 0.0565, ra: 208.290640, dec: 24.377010 },
+            { name: "F13517+2340", z: 0.0552, ra: 208.526780, dec: 23.430390 },
+            { name: "F13521+3310", z: 0.0261, ra: 208.583140, dec: 32.929931 },
+            { name: "F13534+2100", z: 0.1965, ra: 208.959190, dec: 20.770705 },
+            { name: "F13541+2846", z: 0.0755, ra: 209.105630, dec: 28.526258 },
+            { name: "F13556+2451", z: 0.0372, ra: 209.494190, dec: 24.617800 },
+            { name: "F13565+2526", z: 0.0888, ra: 209.716710, dec: 25.194510 },
+            { name: "F13582+6605", z: 0.1222, ra: 209.884850, dec: 65.847386 },
+            { name: "F14001+2214", z: 0.0663, ra: 210.643540, dec: 21.997667 },
+            { name: "F14006+1735", z: 0.0601, ra: 210.746000, dec: 17.348897 },
+            { name: "F14026+4341", z: 0.3229, ra: 211.161660, dec: 43.452065 },
+            { name: "F14041+0117", z: 0.2363, ra: 211.659260, dec: 1.048503 },
+            { name: "F14087+0719", z: 0.0961, ra: 212.823010, dec: 7.089128 },
+            { name: "F14141+5007", z: 0.1854, ra: 213.988550, dec: 49.892939 },
+            { name: "F14143+1244", z: 0.3278, ra: 214.182610, dec: 12.504299 },
+            { name: "F14168+0450", z: 0.0548, ra: 214.836040, dec: 4.606496 },
+            { name: "F14179+2504", z: 0.0789, ra: 215.028740, dec: 24.854903 },
+            { name: "F14196+4801", z: 0.0726, ra: 215.373970, dec: 47.790163 },
+            { name: "F14203+3005", z: 0.1133, ra: 215.626430, dec: 29.873393 },
+            { name: "F14207+3304", z: 0.0342, ra: 215.730550, dec: 32.850653 },
+            { name: "F14209+2849", z: 0.0293, ra: 215.781320, dec: 28.595089 },
+            { name: "F14245+3917", z: 0.0817, ra: 216.627800, dec: 39.062050 },
+            { name: "F14249+1100", z: 0.1373, ra: 216.843170, dec: 10.788502 },
+            { name: "F14267+5723", z: 0.0428, ra: 217.074950, dec: 57.171803 },
+            { name: "F14287+3511", z: 0.0840, ra: 217.723630, dec: 34.976824 },
+            { name: "F14299+3148", z: 0.0551, ra: 218.037460, dec: 31.584652 },
+            { name: "F14300+0134", z: 0.1382, ra: 218.155250, dec: 1.347464 },
+            { name: "F14339+3320", z: 0.0938, ra: 219.010540, dec: 33.131580 },
+            { name: "F14390+6209", z: 0.2755, ra: 220.053180, dec: 61.942517 },
+            { name: "F14413+3730", z: 0.2598, ra: 220.831470, dec: 37.300257 },
+            { name: "F14413+5505", z: 0.1249, ra: 220.710230, dec: 54.885710 },
+            { name: "F14418+4936", z: 0.0302, ra: 220.880290, dec: 49.393125 },
+            { name: "F14421+1549", z: 0.0496, ra: 221.131760, dec: 15.612014 },
+            { name: "F14422+4811", z: 0.0919, ra: 220.978550, dec: 47.990102 },
+            { name: "F14443+1636", z: 0.0542, ra: 221.667570, dec: 16.400639 },
+            { name: "F14457+2309", z: 0.0464, ra: 221.997500, dec: 22.942021 },
+            { name: "F14459+3215", z: 0.0582, ra: 222.005460, dec: 32.053988 },
+            { name: "F14463+3612", z: 0.1133, ra: 222.104580, dec: 35.996289 },
+            { name: "F14464+6119", z: 0.1366, ra: 221.913850, dec: 61.115572 },
+            { name: "F14474+4233", z: 0.1786, ra: 222.336350, dec: 42.350361 },
+            { name: "F14479+1219", z: 0.0979, ra: 222.577660, dec: 12.112720 },
+            { name: "F14488+3521", z: 0.2057, ra: 222.725690, dec: 35.143847 },
+            { name: "F14518+5822", z: 0.1124, ra: 223.293560, dec: 58.165429 },
+            { name: "F14523+3145", z: 0.1186, ra: 223.610430, dec: 31.548444 },
+            { name: "F14529+1645", z: 0.0442, ra: 223.826710, dec: 16.548256 },
+            { name: "F14529+1750", z: 0.0949, ra: 223.823720, dec: 17.641608 },
+            { name: "F14541+3813", z: 0.2833, ra: 224.035960, dec: 38.010714 },
+            { name: "F14542+0931", z: 0.0795, ra: 224.180060, dec: 9.326791 },
+            { name: "F14551+0829", z: 0.0369, ra: 224.399220, dec: 8.285272 },
+            { name: "F14554+4952", z: 0.0135, ra: 224.278330, dec: 49.669019 },
+            { name: "F14556+1328", z: 0.3341, ra: 224.493820, dec: 13.272901 },
+            { name: "F14589+2340", z: 0.2578, ra: 225.305000, dec: 23.485635 },
+            { name: "F14592+1037", z: 0.0304, ra: 225.411670, dec: 10.420411 },
+            { name: "F14599+0252", z: 0.0797, ra: 225.623760, dec: 2.674061 },
+            { name: "F15017+0203", z: 0.1828, ra: 226.087120, dec: 1.866508 },
+            { name: "F15017+1443", z: 0.1180, ra: 226.035290, dec: 14.523144 },
+            { name: "F15034+0353", z: 0.0359, ra: 226.485650, dec: 3.707308 },
+            { name: "F15047+2951", z: 0.1070, ra: 226.726020, dec: 29.666492 },
+            { name: "F15061+5138", z: 0.0459, ra: 226.937500, dec: 51.452851 },
+            { name: "F15064+4908", z: 0.1110, ra: 227.013220, dec: 48.957818 },
+            { name: "F15065+0446", z: 0.1115, ra: 227.267580, dec: 4.578275 },
+            { name: "F15068+4107", z: 0.0302, ra: 227.180150, dec: 40.931821 },
+            { name: "F15069+1808", z: 0.1705, ra: 227.307500, dec: 17.952793 },
+            { name: "F15092+0529", z: 0.0842, ra: 227.921950, dec: 5.302574 },
+            { name: "F15093+2656", z: 0.1284, ra: 227.870170, dec: 26.756523 },
+            { name: "F15116+3252", z: 0.1461, ra: 228.397980, dec: 32.694958 },
+            { name: "F15125+4255", z: 0.1504, ra: 228.585530, dec: 42.745965 },
+            { name: "F15135+2214", z: 0.1897, ra: 228.944680, dec: 22.063619 },
+            { name: "F15153+0517", z: 0.0385, ra: 229.465410, dec: 5.107702 },
+            { name: "F15182+5919", z: 0.0781, ra: 229.840300, dec: 59.139920 },
+            { name: "F15195+0137", z: 0.1133, ra: 230.521130, dec: 1.440727 },
+            { name: "F15206+3631", z: 0.1527, ra: 230.645280, dec: 36.349626 },
+            { name: "F15217+0501", z: 0.0356, ra: 231.069430, dec: 4.855289 },
+            { name: "F15220+5529", z: 0.0389, ra: 230.851770, dec: 55.315387 },
+            { name: "F15221+5619", z: 0.2438, ra: 230.866250, dec: 56.148348 },
+            { name: "F15276+3039", z: 0.0357, ra: 232.419110, dec: 30.485929 },
+            { name: "F15288+0737", z: 0.0337, ra: 232.825350, dec: 7.457753 },
+            { name: "F15327+2340", z: 0.0184, ra: 233.738360, dec: 23.503684 },
+            { name: "F15335+1440", z: 0.0195, ra: 233.968780, dec: 14.517719 },
+            { name: "F15345+0105", z: 0.1365, ra: 234.274800, dec: 0.923018 },
+            { name: "F15347+5803", z: 0.0302, ra: 233.968350, dec: 57.902639 },
+            { name: "F15374+3619", z: 0.0677, ra: 234.848010, dec: 36.161558 },
+            { name: "F15410+0804", z: 0.0366, ra: 235.862630, dec: 7.911688 },
+            { name: "F15437+4647", z: 0.2284, ra: 236.325220, dec: 46.643912 },
+            { name: "F15511+4047", z: 0.0153, ra: 238.220160, dec: 40.646728 },
+            { name: "F15515+4416", z: 0.1968, ra: 238.316440, dec: 44.130380 },
+            { name: "F15529+1920", z: 0.0358, ra: 238.783090, dec: 19.192391 },
+            { name: "F15557+1212", z: 0.0156, ra: 239.533240, dec: 12.070290 },
+            { name: "F15562+2559", z: 0.0709, ra: 239.578120, dec: 25.856909 },
+            { name: "F15585+3724", z: 0.0682, ra: 240.086630, dec: 37.268613 },
+            { name: "F15593+0256", z: 0.0329, ra: 240.464610, dec: 2.802771 },
+            { name: "F15599+3201", z: 0.0450, ra: 240.475060, dec: 31.892042 },
+            { name: "F16028+2818", z: 0.0768, ra: 241.231440, dec: 28.165743 },
+            { name: "F16043+0914", z: 0.1030, ra: 241.688840, dec: 9.111429 },
+            { name: "F16048+2803", z: 0.0460, ra: 241.717350, dec: 27.927531 },
+            { name: "F16073+0442", z: 0.0640, ra: 242.450890, dec: 4.581374 },
+            { name: "F16112+3724", z: 0.0695, ra: 243.256810, dec: 37.287468 },
+            { name: "F16113+4227", z: 0.2337, ra: 243.249320, dec: 42.327866 },
+            { name: "F16121+2611", z: 0.1309, ra: 243.555010, dec: 26.071168 },
+            { name: "F16122+1531", z: 0.3078, ra: 243.632170, dec: 15.406095 },
+            { name: "F16146+3549", z: 0.0279, ra: 244.127820, dec: 35.708015 },
+            { name: "F16162+5021", z: 0.0417, ra: 244.395840, dec: 50.244555 },
+            { name: "F16172+4432", z: 0.3351, ra: 244.705200, dec: 44.421457 },
+            { name: "F16184+5012", z: 0.2834, ra: 244.961140, dec: 50.093151 },
+            { name: "F16197+3523", z: 0.0510, ra: 245.408740, dec: 35.271464 },
+            { name: "F16197+5408", z: 0.1456, ra: 245.219160, dec: 54.016281 },
+            { name: "F16221+2611", z: 0.0392, ra: 246.039080, dec: 26.075254 },
+            { name: "F16229+2422", z: 0.0503, ra: 246.256000, dec: 24.263171 },
+            { name: "F16301+3209", z: 0.0592, ra: 248.010340, dec: 32.060934 },
+            { name: "F16305+2629", z: 0.0586, ra: 248.140850, dec: 26.380706 },
+            { name: "F16327+2318", z: 0.0386, ra: 248.723620, dec: 23.211848 },
+            { name: "F16327+4505", z: 0.0578, ra: 248.557250, dec: 44.996600 },
+            { name: "F16328+2055", z: 0.1285, ra: 248.749280, dec: 20.826691 },
+            { name: "F16330+3100", z: 0.0544, ra: 248.756080, dec: 30.903363 },
+            { name: "F16348+2226", z: 0.2108, ra: 249.250930, dec: 22.353912 },
+            { name: "F16354+2028", z: 0.1181, ra: 249.400830, dec: 20.371217 },
+            { name: "F16391+3500", z: 0.1641, ra: 250.250420, dec: 34.914637 },
+            { name: "F16460+3002", z: 0.1057, ra: 252.003430, dec: 29.949275 },
+            { name: "F16511+4421", z: 0.1348, ra: 253.167000, dec: 44.277170 },
+            { name: "F16579+4250", z: 0.1738, ra: 254.874170, dec: 42.768233 },
+            { name: "F17013+2055", z: 0.0800, ra: 255.878080, dec: 20.849697 },
+            { name: "F17081+3300", z: 0.2786, ra: 257.503110, dec: 32.949429 },
+            { name: "F17092+2122", z: 0.0581, ra: 257.852180, dec: 21.311382 },
+            { name: "F17106+3556", z: 0.0264, ra: 258.118520, dec: 35.884064 },
+            { name: "F17133+5802", z: 0.0926, ra: 258.548460, dec: 57.976128 },
+            { name: "F17141+3115", z: 0.1103, ra: 259.008060, dec: 31.203860 },
+            { name: "F17175+6603", z: 0.2926, ra: 259.408150, dec: 65.994277 },
+            { name: "F21215-0034", z: 0.0618, ra: 321.007900, dec: -0.366320 },
+            { name: "F21262-0117", z: 0.0515, ra: 322.213320, dec: -1.070127 },
+            { name: "F21385-0039", z: 0.1076, ra: 325.283570, dec: -0.428382 },
+            { name: "F21536+1226", z: 0.0765, ra: 329.019140, dec: 12.680144 },
+            { name: "F21568+0058", z: 0.1001, ra: 329.850300, dec: 1.218190 },
+            { name: "F22032+0038", z: 0.2845, ra: 331.443030, dec: 0.888690 },
+            { name: "F22093+2349", z: 0.1014, ra: 332.915810, dec: 24.067043 },
+            { name: "F22201-0835", z: 0.0823, ra: 335.694260, dec: -8.328865 },
+            { name: "F22239-0916", z: 0.2988, ra: 336.641910, dec: -9.018393 },
+            { name: "F22532+1234", z: 0.0797, ra: 343.959250, dec: 12.848599 },
+            { name: "F23007+1714", z: 0.1192, ra: 345.802990, dec: 17.512901 },
+            { name: "F23060+0505", z: 0.1728, ra: 347.141480, dec: 5.358275 },
+            { name: "F23162+0035", z: 0.1201, ra: 349.694030, dec: 0.857237 },
+            { name: "F23233+2817", z: 0.1135, ra: 351.455880, dec: 28.572586 },
+            { name: "F23246-1039", z: 0.0653, ra: 351.810510, dec: -10.388221 },
+            { name: "F23383-1103", z: 0.0873, ra: 355.226680, dec: -10.789453 },
+            { name: "F23411+0228", z: 0.0906, ra: 355.915520, dec: 2.751083 },
+            { name: "F23493-0126", z: 0.1744, ra: 357.983850, dec: -1.153695 },
+            { name: "F23532+2956", z: 0.0306, ra: 358.934330, dec: 30.212325 },
+            { name: "F23594-1047", z: 0.1028, ra: 0.512324, dec: -10.510551 }
+        ];
+
+        // 分类和笔记本地存储
+        function getSavedData(idx) {
+            const key = `galaxy_classification_${galaxies[idx].name}`;
+            try {
+                return JSON.parse(localStorage.getItem(key)) || {};
+            } catch { return {}; }
+        }
+        function saveData(idx, data) {
+            const key = `galaxy_classification_${galaxies[idx].name}`;
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function normalizeSavedData(raw) {
+            const data = (raw && typeof raw === 'object') ? raw : {};
+            return {
+                class: typeof data.class === 'string' ? data.class : '',
+                note: typeof data.note === 'string' ? data.note : '',
+                flags: (data.flags && typeof data.flags === 'object') ? data.flags : {}
+            };
+        }
+
+        function getFlagKeysForClass(selectedClass) {
+            if (selectedClass === 'Disk') return ['disk_choice', 'disk_other_flag'];
+            if (selectedClass === 'Elliptical') return ['elliptical_flag'];
+            if (selectedClass === 'Merger') return ['merger_flag'];
+            if (selectedClass === 'Other') return ['other_flag'];
+            return [];
+        }
+
+        function escapeHtml(s) {
+            return String(s)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
+        }
+
+        // 当前索引
+        // 记住上次浏览的索引
+        let current = 0;
+        const total = galaxies.length;
+        // 尝试从localStorage恢复上次浏览的索引
+        const savedIdx = localStorage.getItem('galaxy_last_index');
+        if (savedIdx !== null && !isNaN(Number(savedIdx)) && Number(savedIdx) >= 0 && Number(savedIdx) < total) {
+            current = Number(savedIdx);
+        }
+
+        // DOM
+        const singleImg = document.getElementById('single-band-img');
+        const rgbImg = document.getElementById('rgb-img');
+        const title = document.getElementById('galaxy-title');
+    const redshift = document.getElementById('galaxy-redshift');
+    const raDecInfo = document.getElementById('galaxy-ra-dec');
+        const form = document.getElementById('classification-form');
+        const note = document.getElementById('note');
+        const savedNotes = document.getElementById('saved-notes');
+        const ellipticalFlagRow = document.getElementById('elliptical-flag-row');
+        const ellipticalFlagInput = document.getElementById('elliptical-flag-input');
+        const ellipticalRadio = form.querySelector('input[type=radio][name=class][value="Elliptical"]');
+        const diskRow = document.getElementById('disk-row');
+        const diskOtherFlagRow = document.getElementById('disk-other-flag-row');
+        const diskOtherFlagInput = document.getElementById('disk-other-flag-input');
+        const diskRadio = form.querySelector('input[type=radio][name=class][value="Disk"]');
+        const mergerFlagRow = document.getElementById('merger-flag-row');
+        const mergerFlagInput = document.getElementById('merger-flag-input');
+        const mergerRadio = form.querySelector('input[type=radio][name=class][value="Merger"]');
+        const otherFlagRow = document.getElementById('other-flag-row');
+        const otherFlagInput = document.getElementById('other-flag-input');
+        const otherRadio = form.querySelector('input[type=radio][name=class][value="Other"]');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const jumpInput = document.getElementById('jump-input');
+        const jumpBtn = document.getElementById('jump-btn');
+        // 分类radio
+        const radios = form.querySelectorAll('input[type=radio][name=class]');
+
+        function getSelectedClassValue() {
+            const selected = Array.from(radios).find(r => r.checked);
+            return selected ? selected.value : '';
+        }
+
+        function getFlagsFromUI(selectedClass) {
+            const flags = {};
+            if (selectedClass === 'Elliptical') {
+                flags.elliptical_flag = ellipticalFlagInput ? ellipticalFlagInput.value : '';
+                return flags;
+            }
+            if (selectedClass === 'Disk') {
+                const active = diskRow ? diskRow.querySelector('button[data-disk-choice].active') : null;
+                flags.disk_choice = active ? active.getAttribute('data-disk-choice') : '';
+                flags.disk_other_flag = diskOtherFlagInput ? diskOtherFlagInput.value : '';
+                return flags;
+            }
+            if (selectedClass === 'Merger') {
+                flags.merger_flag = mergerFlagInput ? mergerFlagInput.value : '';
+                return flags;
+            }
+            if (selectedClass === 'Other') {
+                flags.other_flag = otherFlagInput ? otherFlagInput.value : '';
+                return flags;
+            }
+            return flags;
+        }
+
+        function saveCurrentState(overrides = {}) {
+            const selectedClass = getSelectedClassValue();
+            const rawSaved = normalizeSavedData(getSavedData(current));
+            const base = {
+                class: selectedClass,
+                note: note.value,
+                flags: getFlagsFromUI(selectedClass)
+            };
+            const merged = {
+                ...base,
+                ...overrides,
+                flags: { ...base.flags, ...(overrides.flags || {}) }
+            };
+            saveData(current, merged);
+        }
+
+        function flagsToSummary(flags) {
+            if (!flags || typeof flags !== 'object') return '';
+            const entries = Object.entries(flags)
+                .map(([k, v]) => [k, (v ?? '').toString().trim()])
+                .filter(([, v]) => v.length > 0);
+            if (entries.length === 0) return '';
+            const friendly = entries.map(([k, v]) => {
+                if (k === 'disk_choice') return `disk: ${v}`;
+                if (k === 'disk_other_flag') return `disk flag: ${v}`;
+                return `${k.replaceAll('_flag', '')}: ${v}`;
+            });
+            return friendly.join(' | ');
+        }
+
+        function updateInlineFlagVisibility(selectedClass, savedFlags) {
+            if (diskRow) diskRow.style.display = (selectedClass === 'Disk') ? 'flex' : 'none';
+            if (mergerFlagRow) mergerFlagRow.style.display = (selectedClass === 'Merger') ? 'flex' : 'none';
+            if (otherFlagRow) otherFlagRow.style.display = (selectedClass === 'Other') ? 'flex' : 'none';
+
+            const flags = (savedFlags && typeof savedFlags === 'object') ? savedFlags : {};
+            const diskChoice = typeof flags.disk_choice === 'string' ? flags.disk_choice : '';
+            if (diskOtherFlagRow) {
+                diskOtherFlagRow.style.display = (selectedClass === 'Disk' && diskChoice === 'other') ? 'flex' : 'none';
+            }
+        }
+
+        function setDiskChoice(choice) {
+            if (!diskRow) return;
+            const buttons = diskRow.querySelectorAll('button[data-disk-choice]');
+            buttons.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-disk-choice') === choice));
+        }
+
+        function show(idx) {
+            const g = galaxies[idx];
+            singleImg.src = `Images/Single_band/${g.name}_grz.png`;
+            rgbImg.src = `Images/RGB/${g.name}_riz.png`;
+            // Show name and progress inline
+            title.innerHTML = `${g.name} <span style='font-size:1.1rem;color:#555;font-weight:normal;margin-left:8px;'>(${idx + 1} / ${total})</span>`;
+            redshift.textContent = g.z;
+            // 展示ra, dec，保留6位小数
+            if (g.ra !== undefined && g.dec !== undefined) {
+                raDecInfo.innerHTML = `RA: <span style='color:#1976d2;'>${g.ra.toFixed(6)}</span> &nbsp; DEC: <span style='color:#1976d2;'>${g.dec.toFixed(6)}</span>`;
+            } else {
+                raDecInfo.innerHTML = '';
+            }
+            // 展示Guodong--class（直接读取galaxies数组中的class字段）
+            const classText = g.class ? `Guodong--${g.class}` : '';
+            document.getElementById('guodong-class-info').innerText = classText;
+            // 恢复分类和笔记
+            const saved = normalizeSavedData(getSavedData(idx));
+            radios.forEach(r => r.checked = (saved.class === r.value));
+            note.value = saved.note || '';
+
+            // Elliptical flag 行
+            if (ellipticalFlagInput) {
+                ellipticalFlagInput.value = (saved.flags && typeof saved.flags.elliptical_flag === 'string') ? saved.flags.elliptical_flag : '';
+            }
+            updateEllipticalFlagRowVisibility();
+
+            // Disk/Merger/Other inline flags
+            if (diskOtherFlagInput) {
+                diskOtherFlagInput.value = (saved.flags && typeof saved.flags.disk_other_flag === 'string') ? saved.flags.disk_other_flag : '';
+            }
+            if (mergerFlagInput) {
+                mergerFlagInput.value = (saved.flags && typeof saved.flags.merger_flag === 'string') ? saved.flags.merger_flag : '';
+            }
+            if (otherFlagInput) {
+                otherFlagInput.value = (saved.flags && typeof saved.flags.other_flag === 'string') ? saved.flags.other_flag : '';
+            }
+            setDiskChoice((saved.flags && typeof saved.flags.disk_choice === 'string') ? saved.flags.disk_choice : '');
+            updateInlineFlagVisibility(saved.class, saved.flags);
+
+            // 仅显示备注和删除按钮（不在此处显示Flags）
+            if (saved.note) {
+                savedNotes.innerHTML = `<span style='font-size:0.95rem;'><b>Note</b>: ${escapeHtml(saved.note)}</span> <button id='delete-note-btn' style='font-size:0.95rem;padding:2px 10px;border-radius:5px;background:#e57373;color:#fff;border:none;cursor:pointer;'>删除Note</button>`;
+            } else {
+                savedNotes.innerHTML = '';
+            }
+            // 保存当前索引到localStorage
+            localStorage.setItem('galaxy_last_index', idx);
+        }
+
+        function updateEllipticalFlagRowVisibility() {
+            if (!ellipticalFlagRow || !ellipticalRadio) return;
+            ellipticalFlagRow.style.display = ellipticalRadio.checked ? 'flex' : 'none';
+        }
+
+        // 保存按钮
+        document.getElementById('save-note-btn').onclick = function() {
+            const selected = Array.from(radios).find(r => r.checked);
+            if (!selected) { alert('请选择分类'); return; }
+            saveCurrentState();
+            // 立即刷新显示
+            show(current);
+        };
+
+        // 分类变更：保存并刷新flags区（不再自动跳转到下一张）
+        radios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                const selectedClass = getSelectedClassValue();
+                const saved = normalizeSavedData(getSavedData(current));
+                updateEllipticalFlagRowVisibility();
+                saveData(current, { ...saved, class: selectedClass });
+                show(current);
+            });
+        });
+
+        // 有些浏览器/场景下 click 比 change 更及时，确保 Elliptical 子行立即出现
+        if (ellipticalRadio) {
+            ellipticalRadio.addEventListener('click', updateEllipticalFlagRowVisibility);
+        }
+
+        // Disk buttons: click to toggle + auto-save
+        if (diskRow) {
+            diskRow.addEventListener('click', function(e) {
+                const target = e.target;
+                if (!target || !target.matches || !target.matches('button[data-disk-choice]')) return;
+                if (getSelectedClassValue() !== 'Disk') return;
+                const choice = target.getAttribute('data-disk-choice') || '';
+                setDiskChoice(choice);
+                if (diskOtherFlagRow) {
+                    diskOtherFlagRow.style.display = (choice === 'other') ? 'flex' : 'none';
+                }
+                if (choice !== 'other' && diskOtherFlagInput) {
+                    diskOtherFlagInput.value = '';
+                }
+                saveCurrentState({ flags: { disk_choice: choice, disk_other_flag: (choice === 'other' && diskOtherFlagInput) ? diskOtherFlagInput.value : '' } });
+            });
+        }
+
+        // Disk other flag input: auto-save
+        if (diskOtherFlagInput) {
+            diskOtherFlagInput.addEventListener('input', function() {
+                if (getSelectedClassValue() === 'Disk') {
+                    saveCurrentState();
+                }
+            });
+        }
+
+        // Merger/Other flag inputs: auto-save
+        if (mergerFlagInput) {
+            mergerFlagInput.addEventListener('input', function() {
+                if (getSelectedClassValue() === 'Merger') {
+                    saveCurrentState();
+                }
+            });
+        }
+        if (otherFlagInput) {
+            otherFlagInput.addEventListener('input', function() {
+                if (getSelectedClassValue() === 'Other') {
+                    saveCurrentState();
+                }
+            });
+        }
+
+        // Elliptical flag 输入：实时保存
+        if (ellipticalFlagInput) {
+            ellipticalFlagInput.addEventListener('input', function() {
+                if (getSelectedClassValue() === 'Elliptical') {
+                    saveCurrentState();
+                }
+            });
+        }
+
+        // 上一/下一
+        prevBtn.onclick = function() {
+            if (current > 0) { current--; show(current); }
+        };
+        nextBtn.onclick = function() {
+            if (current < total - 1) { current++; show(current); }
+        };
+
+        // 跳转
+        jumpBtn.onclick = function() {
+            const idx = parseInt(jumpInput.value, 10) - 1;
+            if (idx >= 0 && idx < total) {
+                current = idx; show(current);
+            } else {
+                alert('编号超出范围');
+            }
+        };
+
+        // 回车跳转
+        jumpInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') jumpBtn.onclick();
+        });
+    // 初始化
+    show(current);
+    // 一键清除所有分类和备注
+    document.getElementById('clear-all-btn').onclick = function() {
+        if (!confirm('确定要清除所有分类和备注吗？此操作不可恢复！')) return;
+        for (let i = 0; i < galaxies.length; i++) {
+            localStorage.removeItem(`galaxy_classification_${galaxies[i].name}`);
+        }
+        localStorage.removeItem('galaxy_last_index');
+        alert('所有分类和备注已清除！');
+        location.reload();
+    };
+    // 删除备注按钮事件（事件委托）
+    document.getElementById('saved-notes').addEventListener('click', function(e) {
+        if (e.target && e.target.id === 'delete-note-btn') {
+            const saved = normalizeSavedData(getSavedData(current));
+            saveData(current, { class: saved.class, note: '', flags: saved.flags });
+            show(current);
+        }
+    });
+        document.getElementById('export-result-btn').onclick = function() {
+            let csv = 'name,class,elliptical_flag,disk_bar_flag,disk_no_bar_flag,disk_other_flag,merger_flag,other_flag,note\n';
+            for (let i = 0; i < galaxies.length; i++) {
+                const g = galaxies[i];
+                const saved = normalizeSavedData(getSavedData(i));
+                const c = saved.class ? saved.class.replace(/"/g, '""') : '';
+                const f = saved.flags || {};
+                const ef = typeof f.elliptical_flag === 'string' ? f.elliptical_flag.replace(/"/g, '""') : '';
+                const diskChoice = typeof f.disk_choice === 'string' ? f.disk_choice : '';
+                const db = diskChoice === 'bar' ? '1' : '';
+                const dnb = diskChoice === 'no bar' ? '1' : '';
+                const dof = diskChoice === 'other' && typeof f.disk_other_flag === 'string' ? f.disk_other_flag.replace(/"/g, '""') : '';
+                const mf = typeof f.merger_flag === 'string' ? f.merger_flag.replace(/"/g, '""') : '';
+                const of = typeof f.other_flag === 'string' ? f.other_flag.replace(/"/g, '""') : '';
+                const n = saved.note ? saved.note.replace(/"/g, '""') : '';
+                csv += `"${g.name}","${c}","${ef}","${db}","${dnb}","${dof}","${mf}","${of}","${n}"\n`;
+            }
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'galaxy_classification_results.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+        // Import Results相关JS已移除
+    </script>
+</body>
+</html>
