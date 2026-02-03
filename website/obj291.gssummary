@@ -1,0 +1,121 @@
+# target: obj291
+# config file: /RS2423/JWST/BLAGN_legacy/CEERS_PID_1345_NIRCam/Ready_Data/Pointing_5/GALFITX/galfits_config/obj291
+# fitting mode: images - photometry
+# fiting method: optimizer
+# chisq: 28918.609375
+# reduced chisq: 0.6030364036560059
+# BIC: 29446.732421875
+# fitting time: 1.880310332775116 mins
+############# data summary ############## 
+# image atals: jwst
+#    image number: 0  band: nircam_f115w  chisq: [6501.9385]  dof: [11995.]  reduced chisq: [0.54205406]
+#    image number: 1  band: nircam_f150w  chisq: [5512.3696]  dof: [11993.]  reduced chisq: [0.45963225]
+#    image number: 2  band: nircam_f200w  chisq: [5804.618]  dof: [11981.]  reduced chisq: [0.48448527]
+#    image number: 3  band: nircam_f277w  chisq: [3235.0269]  dof: [3001.]  reduced chisq: [1.0779829]
+#    image number: 4  band: nircam_f356w  chisq: [3137.1565]  dof: [3023.]  reduced chisq: [1.0377626]
+#    image number: 5  band: nircam_f410m  chisq: [1777.3065]  dof: [3010.]  reduced chisq: [0.5904673]
+#    image number: 6  band: nircam_f444w  chisq: [2950.1924]  dof: [3001.]  reduced chisq: [0.9830698]
+############ fitting summary ############ 
+# num_steps: 25000  learning_rate: 0.0008 calculate_hessian: False 
+# free parameters:
+pname    best_value
+csx_nircam_f115w    -0.3527
+csy_nircam_f115w    0.6301
+sky_nircam_f115w    -0.0001
+csx_nircam_f150w    -0.0725
+csy_nircam_f150w    0.7811
+sky_nircam_f150w    0.0004
+csx_nircam_f200w    -0.0219
+csy_nircam_f200w    0.7447
+sky_nircam_f200w    0.0008
+csx_nircam_f277w    -0.5213
+csy_nircam_f277w    -0.2933
+sky_nircam_f277w    -0.0015
+csx_nircam_f356w    -0.5056
+csy_nircam_f356w    -0.2885
+sky_nircam_f356w    -0.0009
+csx_nircam_f410m    -0.4008
+csy_nircam_f410m    -0.2977
+sky_nircam_f410m    -0.0022
+csx_nircam_f444w    -0.4640
+csy_nircam_f444w    -0.2198
+sky_nircam_f444w    -0.0019
+logM_obj0    8.1839
+logNorm_obj0_nircam_f115w    -5.7459
+logNorm_obj0_nircam_f150w    -5.6723
+logNorm_obj0_nircam_f200w    -5.5976
+logNorm_obj0_nircam_f277w    -6.1303
+logNorm_obj0_nircam_f356w    -6.1234
+logNorm_obj0_nircam_f410m    -6.1701
+logNorm_obj0_nircam_f444w    -6.2122
+obj0_xcen    0.0623
+obj0_ycen    0.0004
+obj0_Re    0.2162
+obj0_n    3.9743
+obj0_ang    23.2042
+obj0_axrat    0.5238
+logM_obj1    7.5077
+logNorm_obj1_nircam_f115w    -6.5564
+logNorm_obj1_nircam_f150w    -6.3009
+logNorm_obj1_nircam_f200w    -6.2576
+logNorm_obj1_nircam_f277w    -6.7650
+logNorm_obj1_nircam_f356w    -6.7292
+logNorm_obj1_nircam_f410m    -6.6872
+logNorm_obj1_nircam_f444w    -6.6771
+obj1_xcen    -0.6553
+obj1_ycen    1.1748
+obj1_Re    0.0938
+obj1_n    2.7446
+obj1_ang    -126.7271
+obj1_axrat    0.3841
+# fixed parameters:
+# pname    fixed_value
+obj0_f_cont_bin1    -2.0000
+obj0_f_cont_bin2    -2.0000
+obj0_f_cont_bin3    -2.0000
+obj0_f_cont_bin4    -2.0000
+obj0_f_cont_bin5    -2.0000
+obj0_Z_value    0.0100
+obj0_Av_value    0.7000
+obj0_sigma    100.0000
+logU_obj0    -2.0000
+AVbump_obj0    3.0000
+logMdust_obj0    8.1400
+Umin_obj0    1.0000
+qPAH_obj0    1.0000
+alphad_obj0    1.0000
+gammad_obj0    0.1000
+Mag_obj0_nircam_f115w    22.8722
+Mag_obj0_nircam_f150w    22.6880
+Mag_obj0_nircam_f200w    22.5014
+Mag_obj0_nircam_f277w    22.3280
+Mag_obj0_nircam_f356w    22.3107
+Mag_obj0_nircam_f410m    22.4275
+Mag_obj0_nircam_f444w    22.5326
+obj1_f_cont_bin1    -2.0000
+obj1_f_cont_bin2    -2.0000
+obj1_f_cont_bin3    -2.0000
+obj1_f_cont_bin4    -2.0000
+obj1_f_cont_bin5    -2.0000
+obj1_Z_value    0.0100
+obj1_Av_value    0.7000
+obj1_sigma    100.0000
+logU_obj1    -2.0000
+AVbump_obj1    3.0000
+logMdust_obj1    8.1400
+Umin_obj1    1.0000
+qPAH_obj1    1.0000
+alphad_obj1    1.0000
+gammad_obj1    0.1000
+Mag_obj1_nircam_f115w    26.5886
+Mag_obj1_nircam_f150w    25.9501
+Mag_obj1_nircam_f200w    25.8416
+Mag_obj1_nircam_f277w    25.6050
+Mag_obj1_nircam_f356w    25.5155
+Mag_obj1_nircam_f410m    25.4105
+Mag_obj1_nircam_f444w    25.3852
+z_a    0.4000
+scale_a    5.5345
+z_b    0.4000
+scale_b    5.5345
+######################################### 
