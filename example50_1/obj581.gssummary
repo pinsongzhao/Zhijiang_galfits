@@ -1,0 +1,83 @@
+# target: obj581
+# config file: /home/zps/zhongyi/P5/galfits_config/nosed/obj581
+# fitting mode: images - photometry
+# fiting method: optimizer
+# chisq: 6933.0986328125
+# reduced chisq: 0.4824031591415405
+# BIC: 7201.1435546875
+# fitting time: 2.8473154664039613 mins
+############# data summary ############## 
+# image atals: jwst
+#    image number: 0  band: nircam_f115w  chisq: [1771.9716]  dof: [3600.]  reduced chisq: [0.49221432]
+#    image number: 1  band: nircam_f150w  chisq: [1721.5159]  dof: [3600.]  reduced chisq: [0.47819886]
+#    image number: 2  band: nircam_f200w  chisq: [1750.476]  dof: [3600.]  reduced chisq: [0.4862433]
+#    image number: 3  band: nircam_f277w  chisq: [403.40887]  dof: [900.]  reduced chisq: [0.44823208]
+#    image number: 4  band: nircam_f356w  chisq: [435.99765]  dof: [900.]  reduced chisq: [0.48444185]
+#    image number: 5  band: nircam_f410m  chisq: [420.36407]  dof: [900.]  reduced chisq: [0.4670712]
+#    image number: 6  band: nircam_f444w  chisq: [429.36484]  dof: [900.]  reduced chisq: [0.47707203]
+############ fitting summary ############ 
+# num_steps: 25000  learning_rate: 0.0008 calculate_hessian: False 
+# free parameters:
+pname    best_value
+csx_nircam_f115w    -0.4015
+csy_nircam_f115w    0.0007
+csx_nircam_f150w    -0.1421
+csy_nircam_f150w    0.1233
+csx_nircam_f200w    0.0208
+csy_nircam_f200w    -0.0192
+csx_nircam_f277w    -0.5600
+csy_nircam_f277w    -0.5758
+csx_nircam_f356w    -0.6600
+csy_nircam_f356w    -0.6293
+csx_nircam_f410m    -0.5418
+csy_nircam_f410m    -0.7489
+csx_nircam_f444w    -0.4220
+csy_nircam_f444w    -0.7815
+logM_obj0    8.0398
+logNorm_obj0_nircam_f115w    -7.2304
+logNorm_obj0_nircam_f150w    -7.1962
+logNorm_obj0_nircam_f200w    -7.2020
+logNorm_obj0_nircam_f277w    -7.7347
+logNorm_obj0_nircam_f356w    -7.7646
+logNorm_obj0_nircam_f410m    -7.7177
+logNorm_obj0_nircam_f444w    -7.6994
+obj0_xcen    0.0615
+obj0_ycen    -0.0106
+obj0_Re    0.0570
+obj0_n    1.0695
+obj0_ang    -159.7191
+obj0_axrat    0.7413
+# fixed parameters:
+# pname    fixed_value
+sky_nircam_f115w    0.0000
+sky_nircam_f150w    0.0000
+sky_nircam_f200w    0.0000
+sky_nircam_f277w    0.0000
+sky_nircam_f356w    0.0000
+sky_nircam_f410m    0.0000
+sky_nircam_f444w    0.0000
+obj0_f_cont_bin1    -2.0000
+obj0_f_cont_bin2    -2.0000
+obj0_f_cont_bin3    -2.0000
+obj0_f_cont_bin4    -2.0000
+obj0_f_cont_bin5    -2.0000
+obj0_Z_value    0.0100
+obj0_Av_value    0.7000
+obj0_sigma    100.0000
+logU_obj0    -2.0000
+AVbump_obj0    3.0000
+logMdust_obj0    8.1400
+Umin_obj0    1.0000
+qPAH_obj0    1.0000
+alphad_obj0    1.0000
+gammad_obj0    0.1000
+Mag_obj0_nircam_f115w    26.9436
+Mag_obj0_nircam_f150w    26.8580
+Mag_obj0_nircam_f200w    26.8725
+Mag_obj0_nircam_f277w    26.6991
+Mag_obj0_nircam_f356w    26.7738
+Mag_obj0_nircam_f410m    26.6567
+Mag_obj0_nircam_f444w    26.6107
+z_a    0.4000
+scale_a    5.5345
+######################################### 

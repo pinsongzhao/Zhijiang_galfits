@@ -1,0 +1,71 @@
+# target: obj665
+# config file: /home/zps/zhongyi/P5/galfits_config/nosed/obj665
+# fitting mode: images - photometry
+# fiting method: optimizer
+# chisq: 11457.431640625
+# reduced chisq: 0.5989248156547546
+# BIC: 11674.330078125
+# fitting time: 2.5869627515474956 mins
+############# data summary ############## 
+# image atals: jwst
+#    image number: 0  band: nircam_f115w  chisq: [5316.037]  dof: [9520.]  reduced chisq: [0.55840725]
+#    image number: 1  band: nircam_f277w  chisq: [1600.0509]  dof: [2408.]  reduced chisq: [0.66447294]
+#    image number: 2  band: nircam_f356w  chisq: [2028.1488]  dof: [2408.]  reduced chisq: [0.84225446]
+#    image number: 3  band: nircam_f410m  chisq: [1219.0087]  dof: [2408.]  reduced chisq: [0.50623286]
+#    image number: 4  band: nircam_f444w  chisq: [1294.1865]  dof: [2408.]  reduced chisq: [0.5374529]
+############ fitting summary ############ 
+# num_steps: 25000  learning_rate: 0.0008 calculate_hessian: False 
+# free parameters:
+pname    best_value
+csx_nircam_f115w    0.4121
+csy_nircam_f115w    4.9949
+csx_nircam_f277w    -0.3277
+csy_nircam_f277w    1.6802
+csx_nircam_f356w    -0.3840
+csy_nircam_f356w    1.7873
+csx_nircam_f410m    -0.3684
+csy_nircam_f410m    1.9177
+csx_nircam_f444w    -0.4126
+csy_nircam_f444w    1.7484
+logM_obj0    7.9511
+logNorm_obj0_nircam_f115w    -6.3916
+logNorm_obj0_nircam_f277w    -6.7788
+logNorm_obj0_nircam_f356w    -6.7865
+logNorm_obj0_nircam_f410m    -6.7403
+logNorm_obj0_nircam_f444w    -6.7361
+obj0_xcen    0.1761
+obj0_ycen    -0.0586
+obj0_Re    0.2171
+obj0_n    0.9881
+obj0_ang    -46.1164
+obj0_axrat    0.3470
+# fixed parameters:
+# pname    fixed_value
+sky_nircam_f115w    0.0000
+sky_nircam_f277w    0.0000
+sky_nircam_f356w    0.0000
+sky_nircam_f410m    0.0000
+sky_nircam_f444w    0.0000
+obj0_f_cont_bin1    -2.0000
+obj0_f_cont_bin2    -2.0000
+obj0_f_cont_bin3    -2.0000
+obj0_f_cont_bin4    -2.0000
+obj0_f_cont_bin5    -2.0000
+obj0_Z_value    0.0100
+obj0_Av_value    0.7000
+obj0_sigma    100.0000
+logU_obj0    -2.0000
+AVbump_obj0    3.0000
+logMdust_obj0    8.1400
+Umin_obj0    1.0000
+qPAH_obj0    1.0000
+alphad_obj0    1.0000
+gammad_obj0    0.1000
+Mag_obj0_nircam_f115w    25.0682
+Mag_obj0_nircam_f277w    24.5312
+Mag_obj0_nircam_f356w    24.5505
+Mag_obj0_nircam_f410m    24.4348
+Mag_obj0_nircam_f444w    24.4243
+z_a    0.4000
+scale_a    5.5345
+######################################### 

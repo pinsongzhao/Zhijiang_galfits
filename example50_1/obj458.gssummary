@@ -1,0 +1,121 @@
+# target: obj458
+# config file: /home/zps/zhongyi/P5/galfits_config/nosed/obj458
+# fitting mode: images - photometry
+# fiting method: optimizer
+# chisq: 29028.2265625
+# reduced chisq: 0.4307689368724823
+# BIC: 29495.19140625
+# fitting time: 7.510759337743123 mins
+############# data summary ############## 
+# image atals: jwst
+#    image number: 0  band: nircam_f115w  chisq: [7423.119]  dof: [16866.]  reduced chisq: [0.44012326]
+#    image number: 1  band: nircam_f150w  chisq: [7624.509]  dof: [16852.]  reduced chisq: [0.4524394]
+#    image number: 2  band: nircam_f200w  chisq: [7253.6187]  dof: [16859.]  reduced chisq: [0.43025202]
+#    image number: 3  band: nircam_f277w  chisq: [1656.1018]  dof: [4204.]  reduced chisq: [0.3939348]
+#    image number: 4  band: nircam_f356w  chisq: [1599.9224]  dof: [4223.]  reduced chisq: [0.3788592]
+#    image number: 5  band: nircam_f410m  chisq: [1742.7655]  dof: [4206.]  reduced chisq: [0.41435224]
+#    image number: 6  band: nircam_f444w  chisq: [1728.1919]  dof: [4219.]  reduced chisq: [0.4096212]
+############ fitting summary ############ 
+# num_steps: 25000  learning_rate: 0.0008 calculate_hessian: False 
+# free parameters:
+pname    best_value
+csx_nircam_f115w    0.1723
+csy_nircam_f115w    1.0584
+csx_nircam_f150w    1.1285
+csy_nircam_f150w    1.3049
+csx_nircam_f200w    0.3476
+csy_nircam_f200w    1.6662
+csx_nircam_f277w    -0.1033
+csy_nircam_f277w    -0.0646
+csx_nircam_f356w    -0.4290
+csy_nircam_f356w    0.1755
+csx_nircam_f410m    -0.0887
+csy_nircam_f410m    0.5774
+csx_nircam_f444w    -0.1500
+csy_nircam_f444w    -0.5203
+logM_obj0    7.8197
+logNorm_obj0_nircam_f115w    -6.6218
+logNorm_obj0_nircam_f150w    -6.6108
+logNorm_obj0_nircam_f200w    -6.5586
+logNorm_obj0_nircam_f277w    -7.1160
+logNorm_obj0_nircam_f356w    -7.1727
+logNorm_obj0_nircam_f410m    -7.2950
+logNorm_obj0_nircam_f444w    -7.2525
+obj0_xcen    0.0902
+obj0_ycen    -0.0136
+obj0_Re    0.3667
+obj0_n    1.6517
+obj0_ang    -36.8324
+obj0_axrat    0.3307
+logM_obj1    7.6446
+logNorm_obj1_nircam_f115w    -6.9486
+logNorm_obj1_nircam_f150w    -6.8201
+logNorm_obj1_nircam_f200w    -6.9992
+logNorm_obj1_nircam_f277w    -7.3514
+logNorm_obj1_nircam_f356w    -7.4490
+logNorm_obj1_nircam_f410m    -7.3229
+logNorm_obj1_nircam_f444w    -7.1952
+obj1_xcen    0.3072
+obj1_ycen    -0.9783
+obj1_Re    0.3943
+obj1_n    0.2001
+obj1_ang    -24.2807
+obj1_axrat    0.3091
+# fixed parameters:
+# pname    fixed_value
+sky_nircam_f115w    0.0000
+sky_nircam_f150w    0.0000
+sky_nircam_f200w    0.0000
+sky_nircam_f277w    0.0000
+sky_nircam_f356w    0.0000
+sky_nircam_f410m    0.0000
+sky_nircam_f444w    0.0000
+obj0_f_cont_bin1    -2.0000
+obj0_f_cont_bin2    -2.0000
+obj0_f_cont_bin3    -2.0000
+obj0_f_cont_bin4    -2.0000
+obj0_f_cont_bin5    -2.0000
+obj0_Z_value    0.0100
+obj0_Av_value    0.7000
+obj0_sigma    100.0000
+logU_obj0    -2.0000
+AVbump_obj0    3.0000
+logMdust_obj0    8.1400
+Umin_obj0    1.0000
+qPAH_obj0    1.0000
+alphad_obj0    1.0000
+gammad_obj0    0.1000
+Mag_obj0_nircam_f115w    25.9722
+Mag_obj0_nircam_f150w    25.9446
+Mag_obj0_nircam_f200w    25.8142
+Mag_obj0_nircam_f277w    25.7023
+Mag_obj0_nircam_f356w    25.8442
+Mag_obj0_nircam_f410m    26.1501
+Mag_obj0_nircam_f444w    26.0438
+obj1_f_cont_bin1    -2.0000
+obj1_f_cont_bin2    -2.0000
+obj1_f_cont_bin3    -2.0000
+obj1_f_cont_bin4    -2.0000
+obj1_f_cont_bin5    -2.0000
+obj1_Z_value    0.0100
+obj1_Av_value    0.7000
+obj1_sigma    100.0000
+logU_obj1    -2.0000
+AVbump_obj1    3.0000
+logMdust_obj1    8.1400
+Umin_obj1    1.0000
+qPAH_obj1    1.0000
+alphad_obj1    1.0000
+gammad_obj1    0.1000
+Mag_obj1_nircam_f115w    27.2271
+Mag_obj1_nircam_f150w    26.9059
+Mag_obj1_nircam_f200w    27.3537
+Mag_obj1_nircam_f277w    26.7288
+Mag_obj1_nircam_f356w    26.9730
+Mag_obj1_nircam_f410m    26.6576
+Mag_obj1_nircam_f444w    26.3383
+z_a    0.4000
+scale_a    5.5345
+z_b    0.4000
+scale_b    5.5345
+######################################### 
